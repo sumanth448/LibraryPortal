@@ -1,0 +1,231 @@
+﻿<h4>Hi {{vm.user.firstname.toLowerCase()}}!</h4>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="https://www.iitm.ac.in/">IIT Madras</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#">Requested Books</a></li>
+            <li><a href="#">Issued Books</a></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Settings
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Change Password</a></li>
+                    <li><a href="#/login">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+    <div class="container-fluid">
+        <hr />
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>
+                    <div ng-show = "vm.usertype == 'admin'" ><a>Edit</a></div>
+                    <div ng-show = "vm.usertype == 'librarian'"><a>Issue</a></div>
+                    <div ng-show = "vm.usertype == 'student'"><a>Request</a></div>
+                </th>
+                <th>
+                    <a href="" ng-click="vm.order('index')">Index</a>
+                </th>
+                <th><a href="" ng-click="vm.order('book')"> Book</a> </th>
+                <th><a href="" ng-click="vm.order('date')">LastUpdated</a> </th>
+                <th>
+                    <div ng-show = "vm.usertype == 'admin'"><a>Status</a></div>
+                </th>
+                <th>
+                    <div ng-show = "vm.usertype == 'admin'"><a>IssuedBy</a></div>
+                </th>
+                <th>
+                    <div ng-show = "vm.usertype == 'admin'"><a>IssuedTo</a></div>
+                </th>
+                <th>
+                    <div ng-show = "vm.usertype == 'admin'"><a>Delete</a></div>
+                </th>
+                <th>
+                    <div ng-show = "vm.usertype == 'admin'"><a>Add</a></div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Filter =>></td>
+                <td> <input type="text" ng-model="search.index" /></td>
+                <td> <input type="text" ng-model="search.book" /> </td>
+                <td> <input type="text" ng-model="search.date" /> </td>
+                       <td>
+                           <div ng-show = "vm.usertype == 'admin'">
+                           <input type="text" ng-model="search.status" />
+                           </div>
+                       </td>
+                        <td>
+                            <div ng-show = "vm.usertype == 'admin'">
+                            <input type="text" ng-model="search.issuedfrom" />
+                            </div>
+                        </td>
+                        <td><div ng-show = "vm.usertype == 'admin'">
+                            <input type="text" ng-model="search.issuedto" />
+                        </div>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            <div ng-show = "vm.usertype == 'admin'" >
+                           <button class="btn" data-toggle="modal" data-target="#myModal_1">
+                           <span class="glyphicon glyphicon-plus"></span>
+                           </button>
+                            </div>
+                        </td>
+            </tr>
+            <tr ng-repeat="user in vm.allUsers | orderBy:vm.predicate:vm.reverse | filter:vm.paginate | filter:search" ng-class-odd="'odd'">
+                <td>
+                    <div ng-show = "vm.usertype == 'admin'">
+                    <button class="btn" ng-hide="vm.editingData[user.id]" ng-click="vm.modify(user)">
+                        <span class="glyphicon glyphicon-edit" style="color:blue"></span>
+                    </button>
+                    <button class="btn" ng-show="vm.editingData[user.id]" ng-click="vm.UpdateBookDetails(user)">
+                        <span class="glyphicon glyphicon-ok" style="color:green"></span>
+                    </button>
+                    </div>
+                    <div ng-show = "vm.usertype == 'librarian'">
+                        <button class="btn" ng-click="vm.open(user)" data-toggle="modal" data-target="#myModal">
+                            <span class="glyphicon glyphicon-thumbs-up" style="color:blue"></span>
+                        </button>
+                    </div>
+                    <div ng-show = "vm.usertype == 'student'">
+                        <button class="btn" ng-click="vm.open(user)" data-toggle="modal" data-target="#myModal_2">
+                            Request
+                        </button>
+                    </div>
+                </td>
+                <td>
+                    <div>{{vm.numPerPage *(vm.currentPage-1)+$index+1}}</div>
+                </td>
+                <td>
+                    <div ng-hide="vm.editingData[user.id]">{{user.book}}</div>
+                    <div ng-show="vm.editingData[user.id]"><input type="text" ng-model="user.book" /></div>
+                </td>
+                <td>
+                    <div ng-hide="vm.editingData[user.id]">{{user.date}}</div>
+                    <div ng-show="vm.editingData[user.id]"><input type="text" ng-model="user.date" /></div>
+                </td>
+                <td>
+                    <div ng-show = "vm.usertype == 'admin'">
+                        <div ng-hide="vm.editingData[user.id]">{{user.status}}</div>
+                        <div ng-show="vm.editingData[user.id]"><input type="text" ng-model="user.status" /></div>
+                    </div>
+                </td>
+                <td>
+                    <div ng-show = "vm.usertype == 'admin'">
+                    <div ng-hide="vm.editingData[user.id]">{{user.issuefrom}}</div>
+                    <div ng-show="vm.editingData[user.id]"><input type="text" ng-model="user.issuedfrom" /></div>
+                    </div>
+                </td>
+                <td>
+                    <div ng-show = "vm.usertype == 'admin'">
+                    <div ng-hide="vm.editingData[user.id]">{{user.issuedto}}</div>
+                    <div ng-show="vm.editingData[user.id]"><input type="text" ng-model="user.issuedto" /></div>
+                    </div>
+                </td>
+                <td>
+                    <div ng-show = "vm.usertype == 'admin'"><a><button class="btn" ng-click="vm.deletebook(user)">
+                    <span class="glyphicon glyphicon-remove"></span>
+                    </button></a>
+                    </div>
+                </td>
+                <td></td>
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Issue a Book</h4>
+                            </div>
+                            <div class="modal-body">
+                                <h4>Select User:</h4>
+                                <ui-select ng-model="vm.selecteduserforissue.email" theme="select2" style="min-width: 200px;">
+                                    <ui-select-match>{{vm.selecteduserforissue.email}}</ui-select-match>
+                                    <ui-select-choices repeat="t.email as t in vm.emaildetails | filter: $select.search">
+                                        <div ng-bind-html="t.email | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" ng-click="vm.issuebook(vm.selecteduserforissue.email)" data-dismiss="modal">OK</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal fade" id="myModal_2" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Request a Book</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure want to request a book?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" ng-click="vm.issuebook(vm.selecteduserforissue.email)" data-dismiss="modal">OK</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal fade" id="myModal_1" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Add a Book</h4>
+                            </div>
+                            <div class="modal-body">
+                                <h4>Select status:</h4>
+                                <ui-select ng-model="vm.status.status" theme="select2" style="min-width: 200px;">
+                                    <ui-select-match>{{vm.status.status}}</ui-select-match>
+                                    <ui-select-choices repeat="t.status as t in vm.status | filter: $select.search">
+                                        <div ng-bind-html="t.status | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+
+                                <h4>Select User:</h4>
+                                <ui-select ng-model="vm.selecteduserforissue.email" theme="select2" style="min-width: 200px;">
+                                    <ui-select-match>{{vm.selecteduserforissue.email}}</ui-select-match>
+                                    <ui-select-choices repeat="t.email as t in vm.emaildetails | filter: $select.search">
+                                        <div ng-bind-html="t.email | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+
+                                <h4>Enter Book Name:</h4>
+                                <input type="text" ng-model="vm.bookname">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" ng-click="vm.addnewbook(vm.statusvalue.status,vm.selecteduserforissue.email,vm.bookname)" data-dismiss="modal">OK</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+        <pagination total-items="vm.allUsers.length" ng-model="vm.currentPage"
+                    max-size="5" boundary-links="true"
+                    items-per-page="vm.numPerPage" class="pagination-sm">
+        </pagination>
+    </div>

@@ -1,0 +1,13 @@
+server:
+  type: simple
+  rootPath: /api/*
+  applicationContextPath: /
+  adminContextPath: /admin
+  connector:
+    type: http
+    port: 9090
+database:
+    driverClass: com.mysql.jdbc.Driver
+    user: root
+    password: sumanth448
+    url: jdbc:mysql://localhost/library
