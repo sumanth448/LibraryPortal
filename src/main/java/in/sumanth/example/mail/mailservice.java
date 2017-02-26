@@ -31,16 +31,16 @@ public class mailservice {
 
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(
-                                "roshan19911992@gmail.com", "9985643733");
+                                "your email", "your password");
                     }
                 });
 
         try {
             Message message = new MimeMessage(session);
 
-            message.setFrom(new InternetAddress("roshan19911992@gmail.com"));
+            message.setFrom(new InternetAddress("your email"));
             message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse("sumanth448@gmail.com"));
+                    InternetAddress.parse("your email"));
             message.setSubject("Testing Subject");
 
             BodyPart body = new MimeBodyPart();
